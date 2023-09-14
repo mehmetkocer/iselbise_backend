@@ -1,0 +1,207 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// diagram link >> https://dbdiagram.io/d/iselbise1-6502dfe202bd1c4a5e909996
+
+Table user_accounts {
+  id_ varchar [pk]
+  username varchar
+  email varchar
+  password varchar
+  first_name varchar
+  last_name varchar
+  shipping_address arr
+  billing_address arr
+  phone varchar
+  profile_picture url
+  order_id arr [ref: > orders.id_]
+  created_at timestamp
+  updated_at timestamp
+}
+Table cart {
+  id_ varchar [pk]
+  user_id arr [ref: > user_accounts.id_]
+  cart_items arr [ref: > products.id_]
+  sub_total integer
+}
+Table orders {
+  id_ varchar [pk]
+  order_number varchar
+  user_id varchar [ref: > user_accounts.id_]
+  order_date timestamp
+  total_price integer
+  order_status varchar
+  shipping_address arr
+  payment_method varchar
+  items arr [ref: > products.id_]
+}
+Table payment {
+  id_ varchar [pk]
+  user_id arr [ref: > user_accounts.id_]
+  payment_methods arr
+}
+Table wishlist {
+  id_ varchar [pk]
+  user_id arr [ref: > user_accounts.id_]
+  wishlist_items arr [ref: > products.id_]
+}
+Table user_agents {
+  id_ varchar [pk]
+  user arr [ref: > user_accounts.id_]
+  is_known boolean
+  created_at timestamp
+  updated_at timestamp
+}
+Table user_sessions {
+  id_ varchar [pk]
+  user_id arr [ref: > user_accounts.id_]
+  session_id varchar
+  login_time timestamp
+  logout_time timestamp
+  ip_address varchar
+  user_agent arr [ref: > user_agents.id_]
+  activity_log_id arr [ref: > user_activity_log.id_]
+}
+Table user_activity_log {
+  id_ varchar [pk]
+  timestamp timestamp
+  action varchar
+  objects arr
+}
+Table search_history {
+  id_ varchar [pk]
+  user_id arr [ref: > user_accounts.id_]
+  search_queries arr
+}
+
+
+Table seller_accounts {
+  id_ varchar [pk]
+  seller_name varchar
+  email varchar
+  password varchar
+  description varchar
+  address arr
+  phone varchar
+  logo url
+  product_id arr [ref: > products.id_]
+  created_at timestamp
+  updated_at timestamp
+}
+Table seller_payment {
+  id_ varchar [pk]
+  seller_id arr [ref: > seller_accounts.id_]
+  payment_methods arr
+}
+Table products {
+  id_ varchar [pk]
+  name varchar
+  description varchar
+  price integer
+  stockQuantity integer
+  attributes arr [ref: > attributes.id_]
+  images url
+  ratings arr
+  manufacturer arr [ref: > manufacturer.id_]
+  category arr [ref: > categories.id_]
+  created_at timestamp
+  updated_at timestamp
+}
+Table seller_agents {
+  id_ varchar [pk]
+  user arr [ref: > seller_accounts.id_]
+  is_known boolean
+  created_at timestamp
+  updated_at timestamp
+}
+Table seller_sessions {
+  id_ varchar [pk]
+  seller_id arr [ref: > seller_accounts.id_]
+  session_id varchar
+  login_time timestamp
+  logout_time timestamp
+  ip_address varchar
+  seller_agent arr [ref: > seller_agents.id_]
+  seller_activity_log_id arr [ref: > seller_activity_log.id_]
+}
+Table seller_activity_log {
+  id_ varchar [pk]
+  timestamp timestamp
+  action varchar
+  objects arr
+}
+
+Table manufacturer {
+  id_ varchar [pk]
+  name varchar
+  description varchar
+  categories arr [ref: > categories.id_]
+  products arr [ref: > products.id_]
+  created_at timestamp
+  updated_at timestamp
+}
+Table categories {
+  id_ varchar [pk]
+  name varchar
+  description varchar
+  parent_category arr [ref: > categories.id_]
+  sub_categories arr [ref: > categories.id_]
+  products arr [ref: > products.id_]
+  created_at timestamp
+  updated_at timestamp
+}
+Table attributes {
+  id_ varchar [pk]
+  name varchar
+  description varchar
+  type varchar
+  values arr
+}
+Table db_transactions {
+  id_ varchar [pk]
+  type varchar
+  query varchar
+  owner arr [ref: > user_agents.id_]
+  timestamp timestamp
+}
+Table usage_metrics {
+  id_ varchar [pk]
+  active_agents_hourly arr
+  active_agents arr
+  user_session_count arr
+  seller_session_count arr
+  user_log_count arr
+  seller_log_count arr
+  user_transaction_count arr
+  seller_transaction_count arr
+  order_count arr
+  main_page_view_count arr
+  new_user_created_count arr
+  new_product_created_count arr
+}
+Table active_sessions {
+  id_ varchar [pk]
+  active_user_sessions arr [ref: > user_sessions.id_]
+  active_seller_sessions arr [ref: > seller_sessions.id_]
+}
+Table active_agents {
+  id_ varchar [pk]
+  active_user_agents arr [ref: > user_agents.id_]
+  active_seller_agents arr [ref: > seller_agents.id_]
+}
+Table trusted_agents {
+  id_ varchar [pk]
+  trusted_agent_id varchar
+  ip varchar
+  admins arr [ref: > admins.id_]
+}
+Table admins {
+  id_ varchar [pk]
+  admin_id varchar
+  admin_level varchar
+  username varchar
+  is_valid boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
